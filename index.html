@@ -9,15 +9,17 @@
     <style>
         :root { --ingreso: #10b981; --egreso: #ef4444; }
         
-        /* Modo Oscuro Total */
+        /* MODO OSCURO TOTAL */
         .dark-mode { background-color: #020617 !important; color: #f8fafc !important; }
         .dark-mode .bg-white { background-color: #0f172a !important; color: #f1f5f9 !important; border-color: #1e293b !important; }
         .dark-mode .bg-slate-50 { background-color: #1e293b !important; }
         .dark-mode input, .dark-mode select { background-color: #1e293b !important; color: white !important; border-color: #334155 !important; }
         .dark-mode .text-slate-700, .dark-mode .text-slate-800, .dark-mode h1 { color: #f1f5f9 !important; }
-        
+        .dark-mode .shadow-sm { box-shadow: none !important; border: 1px solid #334155; }
+
+        /* TRANSICIONES Y BOTONES */
         body { transition: background-color 0.4s ease; }
-        .color-dot { cursor: pointer; transition: transform 0.2s; border: 2px solid white; border-radius: 50%; width: 24px; height: 24px; }
+        .color-dot { cursor: pointer; transition: transform 0.2s; border: 2px solid white; border-radius: 50%; width: 24px; height: 24px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .color-dot:hover { transform: scale(1.2); }
     </style>
 </head>
@@ -27,42 +29,41 @@
         <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-md transition-all">
             <div class="text-center mb-8">
                 <h2 id="authTitle" class="text-3xl font-black text-slate-800 tracking-tight">Iniciar Sesión</h2>
-                <p class="text-slate-500 mt-2">Bienvenido a tu control financiero</p>
+                <p class="text-slate-500 mt-2">Gestiona tu dinero correctamente</p>
             </div>
             <div class="space-y-4">
-                <input type="email" id="emailInput" class="w-full p-4 border rounded-2xl outline-none focus:ring-4 focus:ring-blue-100" placeholder="correo@ejemplo.com">
-                <input type="password" id="passInput" class="w-full p-4 border rounded-2xl outline-none focus:ring-4 focus:ring-blue-100" placeholder="Contraseña">
+                <input type="email" id="emailInput" class="w-full p-4 border rounded-2xl outline-none focus:ring-4 focus:ring-indigo-100" placeholder="correo@ejemplo.com">
+                <input type="password" id="passInput" class="w-full p-4 border rounded-2xl outline-none focus:ring-4 focus:ring-indigo-100" placeholder="Contraseña">
                 <button id="btnAccion" class="w-full bg-slate-900 text-white font-bold py-4 rounded-2xl hover:bg-black shadow-lg transition-all active:scale-95">Entrar</button>
-                
                 <p class="text-center text-sm text-slate-500">
                     <span id="toggleText">¿No tienes cuenta?</span> 
-                    <a href="javascript:void(0)" id="toggleLink" class="text-blue-600 font-bold hover:underline">Regístrate</a>
+                    <a href="javascript:void(0)" id="toggleLink" class="text-indigo-600 font-bold hover:underline">Regístrate</a>
                 </p>
             </div>
         </div>
     </div>
 
-    <div id="appContainer" class="max-w-6xl mx-auto p-4 md:p-8 hidden">
-        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
+    <div id="appContainer" class="max-w-7xl mx-auto p-4 md:p-8 hidden">
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
             <div>
                 <h1 class="text-4xl font-black text-slate-900">Control de Gastos</h1>
-                <p class="text-slate-500 font-medium tracking-tight">Sesión activa: <span id="sesionUsuario" class="font-bold text-slate-800"></span></p>
+                <p class="text-slate-500 font-medium">Usuario: <span id="sesionUsuario" class="font-bold text-indigo-600"></span></p>
             </div>
             
-            <div class="flex flex-wrap items-center gap-3 bg-white p-3 rounded-2xl shadow-sm border">
-                <div id="colorPicker" class="flex gap-2 px-2">
-                    <div class="color-dot bg-slate-50" onclick="changeBg('#f8fafc')"></div>
-                    <div class="color-dot bg-purple-100" onclick="changeBg('#f5f3ff')"></div>
-                    <div class="color-dot bg-green-100" onclick="changeBg('#f0fdf4')"></div>
-                    <div class="color-dot bg-rose-100" onclick="changeBg('#fff1f2')"></div>
+            <div class="flex flex-wrap items-center gap-3 bg-white p-3 rounded-2xl shadow-sm border border-slate-100">
+                <div id="colorPicker" class="flex gap-2 px-2 border-r border-slate-200 pr-4">
+                    <div class="color-dot bg-slate-50" onclick="changeBg('#f8fafc')" title="Clásico"></div>
+                    <div class="color-dot bg-purple-100" onclick="changeBg('#f5f3ff')" title="Lavanda"></div>
+                    <div class="color-dot bg-emerald-100" onclick="changeBg('#ecfdf5')" title="Menta"></div>
+                    <div class="color-dot bg-orange-100" onclick="changeBg('#fff7ed')" title="Melocotón"></div>
                 </div>
-                <button id="darkModeBtn" class="p-2 hover:bg-slate-100 rounded-xl text-xl">🌙</button>
+                <button id="darkModeBtn" class="p-2 hover:bg-slate-100 rounded-xl text-xl transition-all">🌙</button>
                 <div class="h-6 w-[1px] bg-slate-200"></div>
                 <div class="flex flex-col text-[10px] font-black text-slate-400">
-                    TASA BS
+                    TASA BCV
                     <input type="number" id="tasaCambio" value="50.00" class="w-16 text-xs p-1 border rounded text-black font-bold">
                 </div>
-                <select id="monedaActual" class="font-bold p-2 rounded-xl border-none outline-none cursor-pointer bg-slate-100">
+                <select id="monedaActual" class="font-bold p-2 rounded-xl border-none outline-none cursor-pointer bg-slate-100 text-slate-700">
                     <option value="USD">USD $</option>
                     <option value="VES">VES Bs.</option>
                 </select>
@@ -70,58 +71,129 @@
             </div>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 text-center">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 text-center">
             <div class="bg-white p-8 rounded-[2rem] shadow-sm border-t-8 border-green-500">
-                <p class="text-xs text-slate-400 uppercase font-black mb-2">Ingresos</p>
+                <p class="text-xs text-slate-400 uppercase font-black mb-2 tracking-widest">Ingresos</p>
                 <p id="totalIngresos" class="text-3xl font-black text-green-500">$ 0.00</p>
             </div>
             <div class="bg-white p-8 rounded-[2rem] shadow-sm border-t-8 border-red-500">
-                <p class="text-xs text-slate-400 uppercase font-black mb-2">Egresos</p>
+                <p class="text-xs text-slate-400 uppercase font-black mb-2 tracking-widest">Egresos</p>
                 <p id="totalEgresos" class="text-3xl font-black text-red-500">$ 0.00</p>
             </div>
             <div class="bg-white p-8 rounded-[2rem] shadow-sm border-t-8 border-slate-900">
-                <p class="text-xs text-slate-400 uppercase font-black mb-2">Balance Neto</p>
+                <p class="text-xs text-slate-400 uppercase font-black mb-2 tracking-widest">Balance Total</p>
                 <p id="balanceNeto" class="text-3xl font-black text-slate-900 tracking-tight">$ 0.00</p>
             </div>
         </div>
 
-        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 mb-8">
-            <h2 class="text-xl font-black mb-6">✨ Nuevo Movimiento</h2>
-            <form id="finanzasForm" class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                <input type="text" id="desc" placeholder="Descripción" class="w-full p-4 border rounded-2xl outline-none md:col-span-2" required>
-                <input type="number" id="monto" placeholder="Monto" step="0.01" class="p-4 border rounded-2xl outline-none font-bold" required>
-                <input type="date" id="fecha" class="p-4 border rounded-2xl outline-none" required>
-                <select id="tipo" class="p-4 border rounded-2xl bg-slate-50 font-bold">
-                    <option value="ingreso">Ingreso (+)</option>
-                    <option value="egreso">Egreso (-)</option>
-                </select>
-                <select id="categoria" class="p-4 border rounded-2xl bg-slate-50">
-                    <option value="General">🏷️ General</option>
-                    <option value="Comida">🍎 Comida</option>
-                    <option value="Sueldo">💰 Sueldo</option>
-                    <option value="Ocio">🎮 Ocio</option>
-                    <option value="Transporte">🚗 Transporte</option>
-                </select>
-                <button type="submit" class="bg-slate-900 text-white font-black p-4 rounded-2xl hover:bg-black transition-all">Guardar Movimiento</button>
-            </form>
-        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+            
+            <div class="lg:col-span-8 bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
+                <h2 class="text-xl font-black mb-6 text-slate-800">✨ Registrar Movimiento</h2>
+                <form id="finanzasForm" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="md:col-span-2">
+                        <label class="text-xs font-bold text-slate-400 uppercase ml-2">Descripción</label>
+                        <input type="text" id="desc" placeholder="Ej: Compra de supermercado..." class="w-full p-4 border rounded-2xl outline-none focus:ring-4 focus:ring-indigo-50 transition-all bg-slate-50" required>
+                    </div>
+                    
+                    <div>
+                        <label class="text-xs font-bold text-slate-400 uppercase ml-2">Monto</label>
+                        <input type="number" id="monto" placeholder="0.00" step="0.01" class="w-full p-4 border rounded-2xl outline-none font-black text-lg bg-slate-50" required>
+                    </div>
 
-        <div class="bg-white p-6 rounded-[2rem] shadow-sm mb-8 grid grid-cols-2 md:grid-cols-5 gap-4 items-end">
-            <input type="text" id="busqueda" placeholder="Buscar..." class="p-3 border rounded-xl outline-none col-span-2">
-            <select id="filtroDia" class="p-3 border rounded-xl outline-none"><option value="">Día</option></select>
-            <select id="filtroMes" class="p-3 border rounded-xl outline-none">
-                <option value="">Mes</option><option value="01">Ene</option><option value="02">Feb</option><option value="03">Mar</option><option value="04">Abr</option><option value="05">May</option><option value="06">Jun</option><option value="07">Jul</option><option value="08">Ago</option><option value="09">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dic</option>
-            </select>
-            <button id="btnLimpiarFiltros" class="p-3 bg-slate-100 font-bold rounded-xl text-slate-600">Limpiar</button>
+                    <div>
+                        <label class="text-xs font-bold text-slate-400 uppercase ml-2">Fecha</label>
+                        <input type="date" id="fecha" class="w-full p-4 border rounded-2xl outline-none bg-slate-50 font-bold" required>
+                    </div>
+
+                    <div>
+                        <label class="text-xs font-bold text-slate-400 uppercase ml-2">Tipo</label>
+                        <select id="tipo" class="w-full p-4 border rounded-2xl bg-slate-50 font-bold text-slate-700 cursor-pointer">
+                            <option value="ingreso">Ingreso (+)</option>
+                            <option value="egreso">Egreso (-)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="text-xs font-bold text-slate-400 uppercase ml-2">Categoría</label>
+                        <select id="categoria" class="w-full p-4 border rounded-2xl bg-slate-50 font-bold text-slate-700 cursor-pointer">
+                            <option value="General">🏷️ General</option>
+                            <option value="Comida">🍎 Comida</option>
+                            <option value="Vivienda">🏠 Vivienda</option>
+                            <option value="Transporte">🚗 Transporte</option>
+                            <option value="Ocio">🎮 Ocio</option>
+                            <option value="Salud">💊 Salud</option>
+                            <option value="Sueldo">💰 Sueldo</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="md:col-span-2 bg-slate-900 text-white font-black p-4 rounded-2xl hover:bg-black transition-all shadow-lg active:scale-95 mt-2">
+                        GUARDAR REGISTRO
+                    </button>
+                </form>
+            </div>
+
+            <div class="lg:col-span-4 flex flex-col gap-4">
+                <div class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 h-full">
+                    <h2 class="text-xl font-black mb-4 text-slate-800">🔍 Buscador Avanzado</h2>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-[10px] font-black uppercase text-slate-400 ml-2">Palabra Clave</label>
+                            <input type="text" id="busqueda" placeholder="Buscar..." class="w-full p-3 border rounded-xl outline-none bg-slate-50 focus:bg-white transition-all">
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-2">
+                            <div>
+                                <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Día</label>
+                                <select id="filtroDia" class="w-full p-2 border rounded-xl bg-slate-50 text-sm font-bold"><option value="">Todos</option></select>
+                            </div>
+                            <div class="col-span-2">
+                                <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Mes</label>
+                                <select id="filtroMes" class="w-full p-2 border rounded-xl bg-slate-50 text-sm font-bold">
+                                    <option value="">Todos</option>
+                                    <option value="01">Enero</option><option value="02">Febrero</option><option value="03">Marzo</option>
+                                    <option value="04">Abril</option><option value="05">Mayo</option><option value="06">Junio</option>
+                                    <option value="07">Julio</option><option value="08">Agosto</option><option value="09">Septiembre</option>
+                                    <option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Año</label>
+                            <select id="filtroAnio" class="w-full p-2 border rounded-xl bg-slate-50 text-sm font-bold">
+                                <option value="">Todos los años</option>
+                                <option value="2024">2024</option>
+                                <option value="2025">2025</option>
+                                <option value="2026">2026</option>
+                            </select>
+                        </div>
+
+                        <button id="btnLimpiarFiltros" class="w-full py-3 bg-slate-100 text-slate-600 font-bold rounded-xl hover:bg-slate-200 transition-all text-sm">
+                            Limpiar Filtros
+                        </button>
+
+                        <hr class="border-slate-100 my-4">
+
+                        <button id="btnBorrarTodo" class="w-full py-3 bg-red-50 text-red-500 font-bold rounded-xl hover:bg-red-500 hover:text-white transition-all text-sm">
+                            🗑️ BORRAR TODO EL HISTORIAL
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="bg-white rounded-[2.5rem] shadow-sm overflow-hidden border border-slate-100 mb-20">
-            <table class="w-full text-left">
-                <tbody id="listaMovimientos" class="divide-y divide-slate-100"></tbody>
-            </table>
+            <div class="p-6 bg-slate-50 border-b border-slate-100">
+                <h3 class="font-black text-slate-400 text-xs uppercase tracking-widest">Detalle de Transacciones</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <tbody id="listaMovimientos" class="divide-y divide-slate-100">
+                        </tbody>
+                </table>
+            </div>
         </div>
-        
-        <button id="btnBorrarTodo" class="mb-20 text-red-400 text-sm hover:text-red-600 font-medium">Borrar todo el historial permanentemente</button>
     </div>
 
     <script type="module">
@@ -129,6 +201,7 @@
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+        // CONFIGURACIÓN FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyBWHMwEcWdg-vBuZ0XrOYYrn1PR0Ck5bXI",
             authDomain: "finanzas-2026-efca9.firebaseapp.com",
@@ -145,23 +218,23 @@
         let esModoRegistro = false;
         let movimientosGlobales = [];
 
-        // Cambios Estéticos
+        // --- INTERFAZ & ESTILOS ---
         window.changeBg = (color) => { if(!document.body.classList.contains('dark-mode')) document.body.style.backgroundColor = color; };
         document.getElementById('darkModeBtn').onclick = () => document.body.classList.toggle('dark-mode');
 
-        // Poblar Selector de Días
+        // Llenar select de días
         const selectDia = document.getElementById('filtroDia');
         for(let i=1; i<=31; i++) { 
             let d = i < 10 ? '0'+i : i; 
             selectDia.innerHTML += `<option value="${d}">${d}</option>`; 
         }
 
-        // Configuración Moneda
+        // Moneda
         let moneda = "USD"; let tasa = 50.00;
         document.getElementById('monedaActual').onchange = (e) => { moneda = e.target.value; aplicarFiltros(); };
         document.getElementById('tasaCambio').oninput = (e) => { tasa = parseFloat(e.target.value) || 1; aplicarFiltros(); };
 
-        // --- AUTENTICACIÓN (ARREGLADA) ---
+        // --- AUTENTICACIÓN ---
         const btnAccion = document.getElementById('btnAccion');
         document.getElementById('toggleLink').onclick = () => {
             esModoRegistro = !esModoRegistro;
@@ -173,18 +246,17 @@
         btnAccion.onclick = async () => {
             const email = document.getElementById('emailInput').value.trim();
             const pass = document.getElementById('passInput').value;
-            if(!email || !pass) return alert("Completa los campos");
-            
+            if(!email || !pass) return alert("Por favor ingresa correo y contraseña");
+
             try {
                 if(esModoRegistro) {
                     const userCred = await createUserWithEmailAndPassword(auth, email, pass);
+                    // IMPORTANTE: Crear el documento inicial vacío para que funcione el guardado después
                     await setDoc(doc(db, "usuarios", userCred.user.uid), { movimientos: [] });
                 } else { 
                     await signInWithEmailAndPassword(auth, email, pass); 
                 }
-            } catch (e) { 
-                alert("Error: " + e.message); 
-            }
+            } catch (e) { alert("Error: " + e.message); }
         };
 
         document.getElementById('btnCerrarSesion').onclick = () => signOut(auth);
@@ -196,12 +268,13 @@
                 document.getElementById('sesionUsuario').innerText = user.email;
                 document.getElementById('fecha').valueAsDate = new Date();
                 
-                // Carga de datos
+                // ESCUCHAR BASE DE DATOS
                 onSnapshot(doc(db, "usuarios", user.uid), (docSnap) => {
                     if (docSnap.exists()) {
                         movimientosGlobales = docSnap.data().movimientos || [];
-                        aplicarFiltros();
+                        aplicarFiltros(); // Actualizar tabla al cargar
                     } else {
+                        // Si el usuario existe en Auth pero no tiene datos en DB, crearlos
                         setDoc(doc(db, "usuarios", user.uid), { movimientos: [] });
                     }
                 });
@@ -211,9 +284,12 @@
             }
         });
 
-        // --- MOVIMIENTOS ---
+        // --- GUARDAR MOVIMIENTO ---
         document.getElementById('finanzasForm').onsubmit = async (e) => {
-            e.preventDefault();
+            e.preventDefault(); // Evitar recarga
+            
+            if(!auth.currentUser) return alert("No hay sesión activa");
+
             const nuevo = {
                 id: Date.now(),
                 desc: document.getElementById('desc').value,
@@ -226,26 +302,28 @@
             try {
                 const nuevosMovs = [...movimientosGlobales, nuevo];
                 await updateDoc(doc(db, "usuarios", auth.currentUser.uid), { movimientos: nuevosMovs });
-                e.target.reset();
+                e.target.reset(); // Limpiar formulario
                 document.getElementById('fecha').valueAsDate = new Date();
             } catch (error) {
                 alert("Error al guardar: " + error.message);
             }
         };
 
+        // --- BORRAR ---
         window.borrarUno = async (id) => {
-            if(!confirm("¿Borrar este registro?")) return;
+            if(!confirm("¿Eliminar este registro?")) return;
             const filtrados = movimientosGlobales.filter(m => m.id !== id);
             await updateDoc(doc(db, "usuarios", auth.currentUser.uid), { movimientos: filtrados });
         };
 
         document.getElementById('btnBorrarTodo').onclick = async () => {
-            if(confirm("¿Estás seguro de que quieres borrar TODO el historial?")) {
+            if(confirm("⚠ ¡CUIDADO! ⚠\n¿Seguro que quieres borrar TODO el historial? No se podrá recuperar.")) {
                 await updateDoc(doc(db, "usuarios", auth.currentUser.uid), { movimientos: [] });
             }
         };
 
-        const inputsFiltro = ['busqueda', 'filtroDia', 'filtroMes'];
+        // --- FILTROS ---
+        const inputsFiltro = ['busqueda', 'filtroDia', 'filtroMes', 'filtroAnio'];
         inputsFiltro.forEach(id => document.getElementById(id).oninput = aplicarFiltros);
         
         document.getElementById('btnLimpiarFiltros').onclick = () => {
@@ -257,49 +335,60 @@
             const busq = document.getElementById('busqueda').value.toLowerCase();
             const fDia = document.getElementById('filtroDia').value;
             const fMes = document.getElementById('filtroMes').value;
+            const fAnio = document.getElementById('filtroAnio').value;
             
             const filtrados = movimientosGlobales.filter(m => {
                 const [anio, mes, dia] = m.fecha.split("-");
-                return m.desc.toLowerCase().includes(busq) && (fDia === "" || dia === fDia) && (fMes === "" || mes === fMes);
+                
+                const matchTexto = m.desc.toLowerCase().includes(busq) || m.categoria.toLowerCase().includes(busq);
+                const matchDia = fDia === "" || dia === fDia;
+                const matchMes = fMes === "" || mes === fMes;
+                const matchAnio = fAnio === "" || anio === fAnio;
+
+                return matchTexto && matchDia && matchMes && matchAnio;
             });
             actualizarUI(filtrados);
         }
 
+        // --- RENDERIZADO (UI) ---
         function formatMoneda(valor) {
             const sim = moneda === "USD" ? "$" : "Bs.";
             const num = moneda === "USD" ? valor : valor * tasa;
-            return `${sim} ${num.toLocaleString('de-DE', {minimumFractionDigits: 2})}`;
+            return `${sim} ${num.toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
         }
 
         function actualizarUI(movs) {
             const lista = document.getElementById('listaMovimientos');
-            lista.innerHTML = ''; let ing = 0, egr = 0;
+            lista.innerHTML = ''; 
+            let ing = 0, egr = 0;
             
+            // Ordenar por fecha (más reciente primero)
             movs.sort((a,b) => new Date(b.fecha) - new Date(a.fecha)).forEach(m => {
                 const row = document.createElement('tr');
-                row.className = 'group hover:bg-slate-50 dark:hover:bg-slate-800 transition-all';
+                row.className = 'group hover:bg-slate-50 dark:hover:bg-slate-800 transition-all border-b border-slate-50 last:border-none';
                 row.innerHTML = `
-                    <td class="p-6 text-xs text-slate-400 font-bold">${m.fecha}</td>
+                    <td class="p-6 text-xs text-slate-400 font-bold font-mono">${m.fecha}</td>
                     <td class="p-6">
-                        <p class="font-black text-slate-700 dark:text-slate-200">${m.desc}</p>
-                        <span class="text-[9px] font-black uppercase text-blue-500">${m.categoria}</span>
+                        <p class="font-black text-slate-700 dark:text-slate-200 text-sm mb-1">${m.desc}</p>
+                        <span class="text-[10px] font-bold uppercase px-2 py-1 rounded bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-300">${m.categoria}</span>
                     </td>
                     <td class="p-6 text-right font-black text-lg ${m.tipo === 'ingreso' ? 'text-green-500' : 'text-red-500'}">
                         ${m.tipo === 'ingreso' ? '+' : '-'}${formatMoneda(m.monto)}
                     </td>
                     <td class="p-6 text-center">
-                        <button onclick="borrarUno(${m.id})" class="p-2 text-red-400 opacity-0 group-hover:opacity-100 transition-all hover:text-red-600">🗑️</button>
+                        <button onclick="borrarUno(${m.id})" class="p-2 text-red-300 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all opacity-0 group-hover:opacity-100">🗑️</button>
                     </td>
                 `;
                 lista.appendChild(row);
                 m.tipo === 'ingreso' ? ing += m.monto : egr += m.monto;
             });
             
+            // Actualizar Totales
             document.getElementById('totalIngresos').innerText = formatMoneda(ing);
             document.getElementById('totalEgresos').innerText = formatMoneda(egr);
             const balance = ing - egr;
             document.getElementById('balanceNeto').innerText = formatMoneda(balance);
-            document.getElementById('balanceNeto').className = `text-3xl font-black ${balance >= 0 ? 'text-slate-900' : 'text-red-500'}`;
+            document.getElementById('balanceNeto').className = `text-3xl font-black ${balance >= 0 ? 'text-slate-900 dark:text-white' : 'text-red-500'}`;
         }
     </script>
 </body>
