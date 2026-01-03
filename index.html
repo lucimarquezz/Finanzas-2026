@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --ingreso: #10b981; --egreso: #ef4444; }
+        
         /* Modo Oscuro Total */
         .dark-mode { background-color: #020617 !important; color: #f8fafc !important; }
         .dark-mode .bg-white { background-color: #0f172a !important; color: #f1f5f9 !important; border-color: #1e293b !important; }
@@ -16,19 +17,23 @@
         .dark-mode .text-slate-700, .dark-mode .text-slate-800, .dark-mode h1 { color: #f1f5f9 !important; }
         
         body { transition: background-color 0.4s ease; }
-        .color-dot { cursor: pointer; transition: transform 0.2s; border: 2px solid white; }
+        .color-dot { cursor: pointer; transition: transform 0.2s; border: 2px solid white; border-radius: 50%; width: 24px; height: 24px; }
         .color-dot:hover { transform: scale(1.2); }
     </style>
 </head>
 <body class="bg-slate-50 font-sans min-h-screen" id="bodyTag">
 
-    <div id="authContainer" class="flex items-center justify-center min-h-screen bg-slate-900 p-4">
-        <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-md">
-            <h2 id="authTitle" class="text-3xl font-black text-slate-800 mb-6 text-center">Iniciar Sesión</h2>
+    <div id="authContainer" class="flex items-center justify-center min-h-screen bg-gradient-to-br from-indigo-600 via-blue-700 to-slate-900 p-4">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-md transition-all">
+            <div class="text-center mb-8">
+                <h2 id="authTitle" class="text-3xl font-black text-slate-800 tracking-tight">Iniciar Sesión</h2>
+                <p class="text-slate-500 mt-2">Bienvenido a tu control financiero</p>
+            </div>
             <div class="space-y-4">
-                <input type="email" id="emailInput" class="w-full p-4 border rounded-2xl outline-none" placeholder="correo@ejemplo.com">
-                <input type="password" id="passInput" class="w-full p-4 border rounded-2xl outline-none" placeholder="Contraseña">
-                <button id="btnAccion" class="w-full bg-slate-800 text-white font-bold py-4 rounded-2xl hover:bg-black transition-all">Entrar</button>
+                <input type="email" id="emailInput" class="w-full p-4 border rounded-2xl outline-none focus:ring-4 focus:ring-blue-100" placeholder="correo@ejemplo.com">
+                <input type="password" id="passInput" class="w-full p-4 border rounded-2xl outline-none focus:ring-4 focus:ring-blue-100" placeholder="Contraseña">
+                <button id="btnAccion" class="w-full bg-slate-900 text-white font-bold py-4 rounded-2xl hover:bg-black shadow-lg transition-all active:scale-95">Entrar</button>
+                
                 <p class="text-center text-sm text-slate-500">
                     <span id="toggleText">¿No tienes cuenta?</span> 
                     <a href="javascript:void(0)" id="toggleLink" class="text-blue-600 font-bold hover:underline">Regístrate</a>
@@ -41,21 +46,21 @@
         <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
             <div>
                 <h1 class="text-4xl font-black text-slate-900">Control de Gastos</h1>
-                <p class="text-slate-500 font-medium">Usuario: <span id="sesionUsuario" class="font-bold"></span></p>
+                <p class="text-slate-500 font-medium tracking-tight">Sesión activa: <span id="sesionUsuario" class="font-bold text-slate-800"></span></p>
             </div>
             
             <div class="flex flex-wrap items-center gap-3 bg-white p-3 rounded-2xl shadow-sm border">
                 <div id="colorPicker" class="flex gap-2 px-2">
-                    <div class="color-dot w-6 h-6 rounded-full bg-slate-50" onclick="changeBg('#f8fafc')"></div>
-                    <div class="color-dot w-6 h-6 rounded-full bg-purple-100" onclick="changeBg('#f5f3ff')"></div>
-                    <div class="color-dot w-6 h-6 rounded-full bg-green-100" onclick="changeBg('#f0fdf4')"></div>
-                    <div class="color-dot w-6 h-6 rounded-full bg-rose-100" onclick="changeBg('#fff1f2')"></div>
+                    <div class="color-dot bg-slate-50" onclick="changeBg('#f8fafc')"></div>
+                    <div class="color-dot bg-purple-100" onclick="changeBg('#f5f3ff')"></div>
+                    <div class="color-dot bg-green-100" onclick="changeBg('#f0fdf4')"></div>
+                    <div class="color-dot bg-rose-100" onclick="changeBg('#fff1f2')"></div>
                 </div>
                 <button id="darkModeBtn" class="p-2 hover:bg-slate-100 rounded-xl text-xl">🌙</button>
                 <div class="h-6 w-[1px] bg-slate-200"></div>
                 <div class="flex flex-col text-[10px] font-black text-slate-400">
                     TASA BS
-                    <input type="number" id="tasaCambio" value="50.00" class="w-16 text-xs p-1 border rounded text-black">
+                    <input type="number" id="tasaCambio" value="50.00" class="w-16 text-xs p-1 border rounded text-black font-bold">
                 </div>
                 <select id="monedaActual" class="font-bold p-2 rounded-xl border-none outline-none cursor-pointer bg-slate-100">
                     <option value="USD">USD $</option>
@@ -65,7 +70,7 @@
             </div>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 text-center">
             <div class="bg-white p-8 rounded-[2rem] shadow-sm border-t-8 border-green-500">
                 <p class="text-xs text-slate-400 uppercase font-black mb-2">Ingresos</p>
                 <p id="totalIngresos" class="text-3xl font-black text-green-500">$ 0.00</p>
@@ -83,7 +88,7 @@
         <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 mb-8">
             <h2 class="text-xl font-black mb-6">✨ Nuevo Movimiento</h2>
             <form id="finanzasForm" class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                <input type="text" id="desc" placeholder="¿Qué compraste o ganaste?" class="w-full p-4 border rounded-2xl outline-none md:col-span-2" required>
+                <input type="text" id="desc" placeholder="Descripción" class="w-full p-4 border rounded-2xl outline-none md:col-span-2" required>
                 <input type="number" id="monto" placeholder="Monto" step="0.01" class="p-4 border rounded-2xl outline-none font-bold" required>
                 <input type="date" id="fecha" class="p-4 border rounded-2xl outline-none" required>
                 <select id="tipo" class="p-4 border rounded-2xl bg-slate-50 font-bold">
@@ -95,8 +100,9 @@
                     <option value="Comida">🍎 Comida</option>
                     <option value="Sueldo">💰 Sueldo</option>
                     <option value="Ocio">🎮 Ocio</option>
+                    <option value="Transporte">🚗 Transporte</option>
                 </select>
-                <button type="submit" id="btnGuardar" class="bg-slate-900 text-white font-black p-4 rounded-2xl hover:bg-black transition-all">Guardar Movimiento</button>
+                <button type="submit" class="bg-slate-900 text-white font-black p-4 rounded-2xl hover:bg-black transition-all">Guardar Movimiento</button>
             </form>
         </div>
 
@@ -106,15 +112,16 @@
             <select id="filtroMes" class="p-3 border rounded-xl outline-none">
                 <option value="">Mes</option><option value="01">Ene</option><option value="02">Feb</option><option value="03">Mar</option><option value="04">Abr</option><option value="05">May</option><option value="06">Jun</option><option value="07">Jul</option><option value="08">Ago</option><option value="09">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dic</option>
             </select>
-            <button id="btnLimpiarFiltros" class="p-3 bg-slate-100 font-bold rounded-xl">Limpiar</button>
+            <button id="btnLimpiarFiltros" class="p-3 bg-slate-100 font-bold rounded-xl text-slate-600">Limpiar</button>
         </div>
 
-        <div class="bg-white rounded-[2.5rem] shadow-sm overflow-hidden border border-slate-100 mb-10">
+        <div class="bg-white rounded-[2.5rem] shadow-sm overflow-hidden border border-slate-100 mb-20">
             <table class="w-full text-left">
                 <tbody id="listaMovimientos" class="divide-y divide-slate-100"></tbody>
             </table>
         </div>
-        <button id="btnBorrarTodo" class="mb-20 text-red-500 font-bold hover:underline">Borrar todo el historial</button>
+        
+        <button id="btnBorrarTodo" class="mb-20 text-red-400 text-sm hover:text-red-600 font-medium">Borrar todo el historial permanentemente</button>
     </div>
 
     <script type="module">
@@ -128,8 +135,7 @@
             projectId: "finanzas-2026-efca9",
             storageBucket: "finanzas-2026-efca9.firebasestorage.app",
             messagingSenderId: "308184261370",
-            appId: "1:308184261370:web:94e1d60157168be38f9f43",
-            measurementId: "G-EHCBKRNV2N"
+            appId: "1:308184261370:web:94e1d60157168be38f9f43"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -139,32 +145,46 @@
         let esModoRegistro = false;
         let movimientosGlobales = [];
 
+        // Cambios Estéticos
         window.changeBg = (color) => { if(!document.body.classList.contains('dark-mode')) document.body.style.backgroundColor = color; };
         document.getElementById('darkModeBtn').onclick = () => document.body.classList.toggle('dark-mode');
 
+        // Poblar Selector de Días
         const selectDia = document.getElementById('filtroDia');
-        for(let i=1; i<=31; i++) { let d = i < 10 ? '0'+i : i; selectDia.innerHTML += `<option value="${d}">${d}</option>`; }
+        for(let i=1; i<=31; i++) { 
+            let d = i < 10 ? '0'+i : i; 
+            selectDia.innerHTML += `<option value="${d}">${d}</option>`; 
+        }
 
+        // Configuración Moneda
         let moneda = "USD"; let tasa = 50.00;
         document.getElementById('monedaActual').onchange = (e) => { moneda = e.target.value; aplicarFiltros(); };
         document.getElementById('tasaCambio').oninput = (e) => { tasa = parseFloat(e.target.value) || 1; aplicarFiltros(); };
 
+        // --- AUTENTICACIÓN (ARREGLADA) ---
         const btnAccion = document.getElementById('btnAccion');
         document.getElementById('toggleLink').onclick = () => {
             esModoRegistro = !esModoRegistro;
-            document.getElementById('authTitle').innerText = esModoRegistro ? 'Registrarse' : 'Iniciar Sesión';
-            btnAccion.innerText = esModoRegistro ? 'Crear Cuenta' : 'Entrar';
+            document.getElementById('authTitle').innerText = esModoRegistro ? 'Crear Cuenta' : 'Iniciar Sesión';
+            btnAccion.innerText = esModoRegistro ? 'Registrarse' : 'Entrar';
+            document.getElementById('toggleText').innerText = esModoRegistro ? '¿Ya tienes cuenta?' : '¿No tienes cuenta?';
         };
 
         btnAccion.onclick = async () => {
             const email = document.getElementById('emailInput').value.trim();
             const pass = document.getElementById('passInput').value;
+            if(!email || !pass) return alert("Completa los campos");
+            
             try {
                 if(esModoRegistro) {
                     const userCred = await createUserWithEmailAndPassword(auth, email, pass);
                     await setDoc(doc(db, "usuarios", userCred.user.uid), { movimientos: [] });
-                } else { await signInWithEmailAndPassword(auth, email, pass); }
-            } catch (e) { alert("Error: " + e.message); }
+                } else { 
+                    await signInWithEmailAndPassword(auth, email, pass); 
+                }
+            } catch (e) { 
+                alert("Error: " + e.message); 
+            }
         };
 
         document.getElementById('btnCerrarSesion').onclick = () => signOut(auth);
@@ -175,11 +195,112 @@
                 document.getElementById('appContainer').classList.remove('hidden');
                 document.getElementById('sesionUsuario').innerText = user.email;
                 document.getElementById('fecha').valueAsDate = new Date();
+                
+                // Carga de datos
                 onSnapshot(doc(db, "usuarios", user.uid), (docSnap) => {
                     if (docSnap.exists()) {
                         movimientosGlobales = docSnap.data().movimientos || [];
                         aplicarFiltros();
+                    } else {
+                        setDoc(doc(db, "usuarios", user.uid), { movimientos: [] });
                     }
                 });
             } else {
-                document.
+                document.getElementById('authContainer').classList.remove('hidden');
+                document.getElementById('appContainer').classList.add('hidden');
+            }
+        });
+
+        // --- MOVIMIENTOS ---
+        document.getElementById('finanzasForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const nuevo = {
+                id: Date.now(),
+                desc: document.getElementById('desc').value,
+                monto: parseFloat(document.getElementById('monto').value),
+                tipo: document.getElementById('tipo').value,
+                categoria: document.getElementById('categoria').value,
+                fecha: document.getElementById('fecha').value
+            };
+            
+            try {
+                const nuevosMovs = [...movimientosGlobales, nuevo];
+                await updateDoc(doc(db, "usuarios", auth.currentUser.uid), { movimientos: nuevosMovs });
+                e.target.reset();
+                document.getElementById('fecha').valueAsDate = new Date();
+            } catch (error) {
+                alert("Error al guardar: " + error.message);
+            }
+        };
+
+        window.borrarUno = async (id) => {
+            if(!confirm("¿Borrar este registro?")) return;
+            const filtrados = movimientosGlobales.filter(m => m.id !== id);
+            await updateDoc(doc(db, "usuarios", auth.currentUser.uid), { movimientos: filtrados });
+        };
+
+        document.getElementById('btnBorrarTodo').onclick = async () => {
+            if(confirm("¿Estás seguro de que quieres borrar TODO el historial?")) {
+                await updateDoc(doc(db, "usuarios", auth.currentUser.uid), { movimientos: [] });
+            }
+        };
+
+        const inputsFiltro = ['busqueda', 'filtroDia', 'filtroMes'];
+        inputsFiltro.forEach(id => document.getElementById(id).oninput = aplicarFiltros);
+        
+        document.getElementById('btnLimpiarFiltros').onclick = () => {
+            inputsFiltro.forEach(id => document.getElementById(id).value = "");
+            aplicarFiltros();
+        };
+
+        function aplicarFiltros() {
+            const busq = document.getElementById('busqueda').value.toLowerCase();
+            const fDia = document.getElementById('filtroDia').value;
+            const fMes = document.getElementById('filtroMes').value;
+            
+            const filtrados = movimientosGlobales.filter(m => {
+                const [anio, mes, dia] = m.fecha.split("-");
+                return m.desc.toLowerCase().includes(busq) && (fDia === "" || dia === fDia) && (fMes === "" || mes === fMes);
+            });
+            actualizarUI(filtrados);
+        }
+
+        function formatMoneda(valor) {
+            const sim = moneda === "USD" ? "$" : "Bs.";
+            const num = moneda === "USD" ? valor : valor * tasa;
+            return `${sim} ${num.toLocaleString('de-DE', {minimumFractionDigits: 2})}`;
+        }
+
+        function actualizarUI(movs) {
+            const lista = document.getElementById('listaMovimientos');
+            lista.innerHTML = ''; let ing = 0, egr = 0;
+            
+            movs.sort((a,b) => new Date(b.fecha) - new Date(a.fecha)).forEach(m => {
+                const row = document.createElement('tr');
+                row.className = 'group hover:bg-slate-50 dark:hover:bg-slate-800 transition-all';
+                row.innerHTML = `
+                    <td class="p-6 text-xs text-slate-400 font-bold">${m.fecha}</td>
+                    <td class="p-6">
+                        <p class="font-black text-slate-700 dark:text-slate-200">${m.desc}</p>
+                        <span class="text-[9px] font-black uppercase text-blue-500">${m.categoria}</span>
+                    </td>
+                    <td class="p-6 text-right font-black text-lg ${m.tipo === 'ingreso' ? 'text-green-500' : 'text-red-500'}">
+                        ${m.tipo === 'ingreso' ? '+' : '-'}${formatMoneda(m.monto)}
+                    </td>
+                    <td class="p-6 text-center">
+                        <button onclick="borrarUno(${m.id})" class="p-2 text-red-400 opacity-0 group-hover:opacity-100 transition-all hover:text-red-600">🗑️</button>
+                    </td>
+                `;
+                lista.appendChild(row);
+                m.tipo === 'ingreso' ? ing += m.monto : egr += m.monto;
+            });
+            
+            document.getElementById('totalIngresos').innerText = formatMoneda(ing);
+            document.getElementById('totalEgresos').innerText = formatMoneda(egr);
+            const balance = ing - egr;
+            document.getElementById('balanceNeto').innerText = formatMoneda(balance);
+            document.getElementById('balanceNeto').className = `text-3xl font-black ${balance >= 0 ? 'text-slate-900' : 'text-red-500'}`;
+        }
+    </script>
+</body>
+</html>
