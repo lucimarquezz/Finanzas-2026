@@ -72,12 +72,37 @@
             </div>
         </div>
 
+        <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 mb-8 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+            <div>
+                <label class="text-[10px] font-black uppercase text-slate-400 ml-2">Día</label>
+                <select id="filtroDia" class="w-full p-3 border rounded-xl outline-none bg-slate-50"><option value="">Todos los días</option></select>
+            </div>
+            <div>
+                <label class="text-[10px] font-black uppercase text-slate-400 ml-2">Mes</label>
+                <select id="filtroMes" class="w-full p-3 border rounded-xl outline-none bg-slate-50">
+                    <option value="">Todos los meses</option>
+                    <option value="01">Enero</option><option value="02">Febrero</option><option value="03">Marzo</option>
+                    <option value="04">Abril</option><option value="05">Mayo</option><option value="06">Junio</option>
+                    <option value="07">Julio</option><option value="08">Agosto</option><option value="09">Septiembre</option>
+                    <option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option>
+                </select>
+            </div>
+            <div>
+                <label class="text-[10px] font-black uppercase text-slate-400 ml-2">Año</label>
+                <select id="filtroAnio" class="w-full p-3 border rounded-xl outline-none bg-slate-50">
+                    <option value="">Todos los años</option>
+                    <option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option>
+                </select>
+            </div>
+            <button id="btnLimpiarFiltros" class="p-3 bg-slate-100 text-slate-600 font-bold rounded-xl hover:bg-slate-200 transition-all">Restablecer Filtros</button>
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
             <div class="lg:col-span-8 bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
                 <h2 class="text-xl font-black mb-6 flex items-center gap-2">✨ Añadir Movimiento</h2>
                 <form id="finanzasForm" class="grid grid-cols-1 md:grid-cols-3 gap-5">
                     <div class="md:col-span-2">
-                        <input type="text" id="desc" placeholder="¿En qué gastaste o qué ganaste?" class="w-full p-4 border rounded-2xl outline-none focus:ring-4 focus:ring-blue-50 transition-all" required>
+                        <input type="text" id="desc" placeholder="Descripción" class="w-full p-4 border rounded-2xl outline-none focus:ring-4 focus:ring-blue-50 transition-all" required>
                     </div>
                     <input type="number" id="monto" placeholder="Monto" step="0.01" class="p-4 border rounded-2xl outline-none focus:ring-4 focus:ring-blue-50 transition-all font-bold" required>
                     <input type="date" id="fecha" class="p-4 border rounded-2xl outline-none font-medium" required>
@@ -93,13 +118,13 @@
                         <option value="Ocio">🎮 Ocio</option>
                         <option value="Sueldo">💰 Sueldo / Negocio</option>
                     </select>
-                    <button type="submit" class="bg-blue-600 text-white font-black p-4 rounded-2xl hover:bg-blue-700 shadow-xl shadow-blue-100 transition-all active:scale-95">Guardar</button>
+                    <button type="submit" class="bg-blue-600 text-white font-black p-4 rounded-2xl hover:bg-blue-700 transition-all active:scale-95">Guardar</button>
                 </form>
             </div>
 
             <div class="lg:col-span-4 bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 flex flex-col justify-between">
                 <div>
-                    <h2 class="text-xl font-black mb-4">🔍 Filtros</h2>
+                    <h2 class="text-xl font-black mb-4">🔍 Buscar</h2>
                     <input type="text" id="busqueda" placeholder="Buscar por nombre..." class="w-full p-4 border rounded-2xl outline-none focus:ring-4 focus:ring-blue-50 mb-4">
                 </div>
                 <button id="btnBorrarTodo" class="w-full bg-red-50 text-red-500 font-bold py-4 rounded-2xl hover:bg-red-100 transition-all">Limpiar Todo</button>
@@ -107,9 +132,6 @@
         </div>
 
         <div class="bg-white rounded-[2.5rem] shadow-sm overflow-hidden border border-slate-100 mb-20">
-            <div class="p-6 border-b bg-slate-50/50 flex justify-between items-center">
-                <h3 class="font-black text-slate-700">Historial Reciente</h3>
-            </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-left">
                     <thead>
@@ -148,21 +170,22 @@
         let esModoRegistro = false;
         let movimientosGlobales = [];
 
-        // --- MODO OSCURO ---
-        document.getElementById('darkModeBtn').onclick = () => {
-            document.getElementById('bodyTag').classList.toggle('dark');
-        };
+        // Poblar días del 1 al 31
+        const selectDia = document.getElementById('filtroDia');
+        for(let i=1; i<=31; i++) {
+            let d = i < 10 ? '0'+i : i;
+            selectDia.innerHTML += `<option value="${d}">${d}</option>`;
+        }
 
-        // --- MANEJO DE MONEDA ---
+        document.getElementById('darkModeBtn').onclick = () => document.getElementById('bodyTag').classList.toggle('dark');
+
         let moneda = "USD";
         let tasa = 50.00;
-        document.getElementById('monedaActual').onchange = (e) => { moneda = e.target.value; actualizarUI(movimientosGlobales); };
-        document.getElementById('tasaCambio').oninput = (e) => { tasa = parseFloat(e.target.value) || 1; actualizarUI(movimientosGlobales); };
+        document.getElementById('monedaActual').onchange = (e) => { moneda = e.target.value; aplicarFiltros(); };
+        document.getElementById('tasaCambio').oninput = (e) => { tasa = parseFloat(e.target.value) || 1; aplicarFiltros(); };
 
-        // --- AUTH ---
         const btnAccion = document.getElementById('btnAccion');
         const toggleLink = document.getElementById('toggleLink');
-
         toggleLink.onclick = () => {
             esModoRegistro = !esModoRegistro;
             document.getElementById('authTitle').innerText = esModoRegistro ? 'Crear Cuenta' : 'Iniciar Sesión';
@@ -176,9 +199,7 @@
                 if(esModoRegistro) {
                     const userCred = await createUserWithEmailAndPassword(auth, email, pass);
                     await setDoc(doc(db, "usuarios", userCred.user.uid), { movimientos: [] });
-                } else {
-                    await signInWithEmailAndPassword(auth, email, pass);
-                }
+                } else { await signInWithEmailAndPassword(auth, email, pass); }
             } catch (e) { alert("Error: " + e.message); }
         };
 
@@ -201,7 +222,7 @@
             onSnapshot(doc(db, "usuarios", uid), (docSnap) => {
                 if (docSnap.exists()) {
                     movimientosGlobales = docSnap.data().movimientos || [];
-                    actualizarUI(movimientosGlobales);
+                    aplicarFiltros();
                 }
             });
         }
@@ -230,16 +251,36 @@
             if(confirm("¿Borrar todo?")) await updateDoc(doc(db, "usuarios", auth.currentUser.uid), { movimientos: [] });
         };
 
-        document.getElementById('busqueda').oninput = (e) => {
-            const term = e.target.value.toLowerCase();
-            const filtrados = movimientosGlobales.filter(m => m.desc.toLowerCase().includes(term));
-            actualizarUI(filtrados);
+        // --- LÓGICA DE FILTRADO COMBINADO ---
+        const inputsFiltro = ['busqueda', 'filtroDia', 'filtroMes', 'filtroAnio'];
+        inputsFiltro.forEach(id => document.getElementById(id).oninput = aplicarFiltros);
+        
+        document.getElementById('btnLimpiarFiltros').onclick = () => {
+            inputsFiltro.forEach(id => document.getElementById(id).value = "");
+            aplicarFiltros();
         };
+
+        function aplicarFiltros() {
+            const busq = document.getElementById('busqueda').value.toLowerCase();
+            const fDia = document.getElementById('filtroDia').value;
+            const fMes = document.getElementById('filtroMes').value;
+            const fAnio = document.getElementById('filtroAnio').value;
+
+            const filtrados = movimientosGlobales.filter(m => {
+                const [anio, mes, dia] = m.fecha.split("-");
+                const cumpleBusq = m.desc.toLowerCase().includes(busq);
+                const cumpleDia = fDia === "" || dia === fDia;
+                const cumpleMes = fMes === "" || mes === fMes;
+                const cumpleAnio = fAnio === "" || anio === fAnio;
+                return cumpleBusq && cumpleDia && cumpleMes && cumpleAnio;
+            });
+            actualizarUI(filtrados);
+        }
 
         function formatMoneda(valor) {
             const sim = moneda === "USD" ? "$" : "Bs.";
             const num = moneda === "USD" ? valor : valor * tasa;
-            return `${sim} ${num.toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            return `${sim} ${num.toLocaleString('de-DE', {minimumFractionDigits: 2})}`;
         }
 
         function actualizarUI(movs) {
