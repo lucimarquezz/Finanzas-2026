@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finanzas 2026 - Control Real</title>
+    <title>Finanzas 2026 - Control Total</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .ingreso { color: #10b981; }
@@ -16,18 +16,10 @@
     <div id="authContainer" class="flex items-center justify-center min-h-screen">
         <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-slate-100">
             <h2 id="authTitle" class="text-2xl font-bold text-slate-800 mb-6 text-center">Iniciar Sesión</h2>
-            
             <div class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-slate-600">Correo Electrónico</label>
-                    <input type="email" id="emailInput" class="w-full p-3 border rounded-lg outline-none focus:ring-2 focus:ring-blue-400" placeholder="usuario@correo.com">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-600">Contraseña (6+ caracteres)</label>
-                    <input type="password" id="passInput" class="w-full p-3 border rounded-lg outline-none focus:ring-2 focus:ring-blue-400" placeholder="******">
-                </div>
+                <input type="email" id="emailInput" class="w-full p-3 border rounded-lg outline-none focus:ring-2 focus:ring-blue-400" placeholder="usuario@correo.com">
+                <input type="password" id="passInput" class="w-full p-3 border rounded-lg outline-none focus:ring-2 focus:ring-blue-400" placeholder="Contraseña">
                 <button id="btnAccion" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition">Entrar</button>
-                
                 <p class="text-center text-sm text-slate-500">
                     <span id="toggleText">¿No tienes cuenta?</span> 
                     <a href="javascript:void(0)" id="toggleLink" class="text-blue-600 font-bold hover:underline">Regístrate</a>
@@ -36,10 +28,10 @@
         </div>
     </div>
 
-    <div id="appContainer" class="max-w-4xl mx-auto p-6 hidden">
+    <div id="appContainer" class="max-w-5xl mx-auto p-6 hidden">
         <header class="flex justify-between items-center mb-8">
             <div>
-                <h1 class="text-3xl font-bold text-slate-800">📊 Mis Finanzas 2026</h1>
+                <h1 class="text-3xl font-bold text-slate-800">📊 Control 2026</h1>
                 <p class="text-slate-500 text-sm font-bold">Sesión: <span id="sesionUsuario" class="text-blue-600"></span></p>
             </div>
             <button id="btnCerrarSesion" class="bg-slate-200 text-slate-700 px-4 py-2 rounded-lg font-bold hover:bg-slate-300 transition">Salir</button>
@@ -60,18 +52,46 @@
             </div>
         </div>
 
-        <form id="finanzasForm" class="bg-white p-6 rounded-xl shadow-sm mb-8 grid grid-cols-1 md:grid-cols-4 gap-4 border border-slate-100">
-            <input type="text" id="desc" placeholder="Descripción" class="p-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-400" required>
-            <input type="number" id="monto" placeholder="Monto" step="0.01" class="p-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-400" required>
-            <select id="tipo" class="p-2 border rounded-lg bg-white outline-none">
-                <option value="ingreso">Ingreso (+)</option>
-                <option value="egreso">Egreso (-)</option>
-            </select>
-            <button type="submit" class="bg-blue-600 text-white font-bold py-2 rounded-lg hover:bg-blue-700 transition">Añadir</button>
-        </form>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                <h2 class="text-lg font-bold mb-4 text-slate-700">Añadir Registro</h2>
+                <form id="finanzasForm" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <input type="text" id="desc" placeholder="Descripción" class="p-2 border rounded-lg col-span-2 md:col-span-1" required>
+                    <input type="number" id="monto" placeholder="Monto" step="0.01" class="p-2 border rounded-lg" required>
+                    <input type="date" id="fecha" class="p-2 border rounded-lg" required>
+                    <select id="tipo" class="p-2 border rounded-lg bg-white">
+                        <option value="ingreso">Ingreso (+)</option>
+                        <option value="egreso">Egreso (-)</option>
+                    </select>
+                    <select id="categoria" class="p-2 border rounded-lg bg-white">
+                        <option value="General">General</option>
+                        <option value="Comida">Comida</option>
+                        <option value="Vivienda">Vivienda</option>
+                        <option value="Transporte">Transporte</option>
+                        <option value="Ocio">Ocio</option>
+                        <option value="Sueldo">Sueldo / Venta</option>
+                    </select>
+                    <button type="submit" class="bg-blue-600 text-white font-bold py-2 rounded-lg hover:bg-blue-700 transition">Añadir</button>
+                </form>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                <h2 class="text-lg font-bold mb-4 text-slate-700">Buscar / Filtrar</h2>
+                <input type="text" id="busqueda" placeholder="Buscar por palabra o fecha..." class="w-full p-2 border rounded-lg mb-4">
+                <button id="btnBorrarTodo" class="w-full bg-red-50 text-red-600 font-bold py-2 rounded-lg hover:bg-red-100 transition">Borrar Todo el Historial</button>
+            </div>
+        </div>
 
         <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-slate-100">
             <table class="w-full text-left">
+                <thead class="bg-slate-50 border-b">
+                    <tr>
+                        <th class="p-4 text-xs font-bold text-slate-400 uppercase">Fecha</th>
+                        <th class="p-4 text-xs font-bold text-slate-400 uppercase">Detalle</th>
+                        <th class="p-4 text-xs font-bold text-slate-400 uppercase text-right">Monto</th>
+                        <th class="p-4 text-xs font-bold text-slate-400 uppercase text-center">Acción</th>
+                    </tr>
+                </thead>
                 <tbody id="listaMovimientos"></tbody>
             </table>
         </div>
@@ -80,9 +100,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Tus credenciales
         const firebaseConfig = {
             apiKey: "AIzaSyBWHMwEcWdg-vBuZ0XrOYYrn1PR0Ck5bXI",
             authDomain: "finanzas-2026-efca9.firebaseapp.com",
@@ -98,41 +117,30 @@
         const db = getFirestore(app);
 
         let esModoRegistro = false;
+        let movimientosGlobales = [];
 
-        // --- MANEJO DE VISTAS ---
-        const toggleLink = document.getElementById('toggleLink');
+        // --- AUTENTICACIÓN ---
         const btnAccion = document.getElementById('btnAccion');
-        const authTitle = document.getElementById('authTitle');
+        const toggleLink = document.getElementById('toggleLink');
 
         toggleLink.onclick = () => {
             esModoRegistro = !esModoRegistro;
-            authTitle.innerText = esModoRegistro ? 'Crear Cuenta' : 'Iniciar Sesión';
+            document.getElementById('authTitle').innerText = esModoRegistro ? 'Crear Cuenta' : 'Iniciar Sesión';
             btnAccion.innerText = esModoRegistro ? 'Registrarse' : 'Entrar';
-            document.getElementById('toggleText').innerText = esModoRegistro ? '¿Ya tienes cuenta?' : '¿No tienes cuenta?';
-            toggleLink.innerText = esModoRegistro ? 'Entra aquí' : 'Regístrate';
+            document.getElementById('toggleLink').innerText = esModoRegistro ? 'Inicia Sesión' : 'Regístrate';
         };
 
-        // --- REGISTRO Y LOGIN ---
         btnAccion.onclick = async () => {
             const email = document.getElementById('emailInput').value.trim();
             const pass = document.getElementById('passInput').value;
-            
-            if(!email.includes('@')) return alert("Por favor, pon un correo válido con @");
-            if(pass.length < 6) return alert("La contraseña debe tener al menos 6 caracteres");
-
             try {
                 if(esModoRegistro) {
                     const userCred = await createUserWithEmailAndPassword(auth, email, pass);
-                    // Crear el espacio en la base de datos para el nuevo usuario
                     await setDoc(doc(db, "usuarios", userCred.user.uid), { movimientos: [] });
-                    alert("¡Cuenta creada correctamente! Iniciando sesión...");
                 } else {
                     await signInWithEmailAndPassword(auth, email, pass);
                 }
-            } catch (error) {
-                if(error.code === 'auth/email-already-in-use') alert("Este correo ya está registrado.");
-                else alert("Error: " + error.message);
-            }
+            } catch (e) { alert("Error: " + e.message); }
         };
 
         document.getElementById('btnCerrarSesion').onclick = () => signOut(auth);
@@ -142,6 +150,7 @@
                 document.getElementById('authContainer').classList.add('hidden');
                 document.getElementById('appContainer').classList.remove('hidden');
                 document.getElementById('sesionUsuario').innerText = user.email;
+                document.getElementById('fecha').valueAsDate = new Date();
                 escucharDatos(user.uid);
             } else {
                 document.getElementById('authContainer').classList.remove('hidden');
@@ -149,43 +158,75 @@
             }
         });
 
-        // --- BASE DE DATOS ---
+        // --- DATOS ---
         function escucharDatos(uid) {
             onSnapshot(doc(db, "usuarios", uid), (docSnap) => {
                 if (docSnap.exists()) {
-                    actualizarUI(docSnap.data().movimientos || []);
-                } else {
-                    // Si el usuario existe en Auth pero no en la DB, creamos su documento
-                    setDoc(doc(db, "usuarios", uid), { movimientos: [] });
+                    movimientosGlobales = docSnap.data().movimientos || [];
+                    actualizarUI(movimientosGlobales);
                 }
             });
         }
 
         document.getElementById('finanzasForm').onsubmit = async (e) => {
             e.preventDefault();
-            const nuevoMov = {
+            const nuevo = {
                 id: Date.now(),
                 desc: document.getElementById('desc').value,
                 monto: parseFloat(document.getElementById('monto').value),
-                tipo: document.getElementById('tipo').value
+                tipo: document.getElementById('tipo').value,
+                categoria: document.getElementById('categoria').value,
+                fecha: document.getElementById('fecha').value
             };
-            const userRef = doc(db, "usuarios", auth.currentUser.uid);
-            await updateDoc(userRef, { movimientos: arrayUnion(nuevoMov) });
+            const nuevosMovimientos = [...movimientosGlobales, nuevo];
+            await updateDoc(doc(db, "usuarios", auth.currentUser.uid), { movimientos: nuevosMovimientos });
             e.target.reset();
+            document.getElementById('fecha').valueAsDate = new Date();
         };
 
-        function actualizarUI(movimientos) {
+        // --- BORRAR SELECCIONADO ---
+        window.borrarUno = async (id) => {
+            if(!confirm("¿Borrar este registro?")) return;
+            const filtrados = movimientosGlobales.filter(m => m.id !== id);
+            await updateDoc(doc(db, "usuarios", auth.currentUser.uid), { movimientos: filtrados });
+        };
+
+        // --- BORRAR TODO ---
+        document.getElementById('btnBorrarTodo').onclick = async () => {
+            if(!confirm("¿ESTÁS SEGURO? Se borrarán todos tus datos de 2026.")) return;
+            await updateDoc(doc(db, "usuarios", auth.currentUser.uid), { movimientos: [] });
+        };
+
+        // --- BUSCADOR ---
+        document.getElementById('busqueda').oninput = (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtrados = movimientosGlobales.filter(m => 
+                m.desc.toLowerCase().includes(term) || 
+                m.fecha.includes(term) || 
+                m.categoria.toLowerCase().includes(term)
+            );
+            actualizarUI(filtrados);
+        };
+
+        function actualizarUI(movs) {
             const lista = document.getElementById('listaMovimientos');
             lista.innerHTML = '';
             let ing = 0, egr = 0;
 
-            [...movimientos].reverse().forEach(m => {
+            movs.sort((a,b) => new Date(b.fecha) - new Date(a.fecha)).forEach(m => {
                 const row = document.createElement('tr');
                 row.className = 'border-b hover:bg-slate-50 transition';
                 row.innerHTML = `
-                    <td class="p-4 text-slate-700 font-medium">${m.desc}</td>
+                    <td class="p-4 text-xs text-slate-500 font-mono">${m.fecha}</td>
+                    <td class="p-4">
+                        <p class="text-slate-700 font-bold text-sm">${m.desc}</p>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 uppercase">${m.categoria}</span>
+                    </td>
                     <td class="p-4 text-right font-mono font-bold ${m.tipo === 'ingreso' ? 'ingreso' : 'egreso'}">
                         ${m.tipo === 'ingreso' ? '+' : '-'}$${m.monto.toFixed(2)}
+                    </td>
+                    <td class="p-4 text-center">
+                        <button onclick="borrarUno(${m.id})" class="text-red-300 hover:text-red-600 transition">🗑️</button>
                     </td>
                 `;
                 lista.appendChild(row);
