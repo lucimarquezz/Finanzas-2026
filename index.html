@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finanzas 2026 - Control de Acceso</title>
+    <title>Finanzas 2026 - Mi Control Real</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .ingreso { color: #10b981; }
@@ -11,27 +11,19 @@
         .hidden { display: none; }
     </style>
 </head>
-<body class="bg-slate-50 font-sans min-h-screen">
+<body class="bg-slate-50 min-h-screen">
 
     <div id="authContainer" class="flex items-center justify-center min-h-screen">
         <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-slate-100">
-            <h2 id="authTitle" class="text-2xl font-bold text-slate-800 mb-6 text-center">Iniciar Sesión</h2>
-            
+            <h2 id="authTitle" class="text-3xl font-bold text-slate-800 mb-2 text-center">📊 Finanzas 2026</h2>
+            <p class="text-slate-500 text-center mb-6 text-sm">Tu dinero, bajo control en la nube</p>
             <div class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-slate-600">Usuario</label>
-                    <input type="text" id="userInput" class="w-full p-3 border rounded-lg outline-none focus:ring-2 focus:ring-blue-400">
+                <input type="email" id="emailInput" placeholder="Correo electrónico" class="w-full p-3 border rounded-lg outline-none focus:ring-2 focus:ring-blue-400">
+                <input type="password" id="passInput" placeholder="Contraseña" class="w-full p-3 border rounded-lg outline-none focus:ring-2 focus:ring-blue-400">
+                <div class="flex gap-2">
+                    <button id="btnLogin" class="w-1/2 bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition">Entrar</button>
+                    <button id="btnReg" class="w-1/2 bg-slate-100 text-slate-700 font-bold py-3 rounded-lg hover:bg-slate-200 transition">Registrar</button>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-600">Contraseña</label>
-                    <input type="password" id="passInput" class="w-full p-3 border rounded-lg outline-none focus:ring-2 focus:ring-blue-400">
-                </div>
-                <button onclick="manejarAuth()" id="btnAuth" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition">Entrar</button>
-                
-                <p class="text-center text-sm text-slate-500">
-                    <span id="toggleText">¿No tienes cuenta?</span> 
-                    <a href="javascript:void(0)" onclick="cambiarModo()" id="toggleLink" class="text-blue-600 font-bold hover:underline">Regístrate</a>
-                </p>
             </div>
         </div>
     </div>
@@ -39,29 +31,29 @@
     <div id="appContainer" class="max-w-4xl mx-auto p-6 hidden">
         <header class="flex justify-between items-center mb-8">
             <div>
-                <h1 class="text-3xl font-bold text-slate-800">📊 Mis Finanzas 2026</h1>
-                <p class="text-slate-500">Sesión iniciada como: <span id="sesionUsuario" class="font-bold text-blue-600"></span></p>
+                <h1 class="text-3xl font-bold text-slate-800">📊 Mi Control 2026</h1>
+                <p id="userStatus" class="text-xs text-slate-500"></p>
             </div>
-            <button onclick="cerrarSesion()" class="bg-slate-200 text-slate-700 px-4 py-2 rounded-lg hover:bg-slate-300 transition text-sm font-bold">Cerrar Sesión</button>
+            <button id="btnLogout" class="bg-red-50 text-red-600 px-4 py-2 rounded-lg font-bold hover:bg-red-100 transition">Cerrar Sesión</button>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500">
-                <p class="text-sm text-slate-500 uppercase font-bold">Ingresos</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 text-center">
+            <div class="bg-white p-6 rounded-xl shadow-sm border-b-4 border-green-500">
+                <p class="text-xs text-slate-400 uppercase font-bold">Ingresos</p>
                 <p id="totalIngresos" class="text-2xl font-bold ingreso">$0.00</p>
             </div>
-            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500">
-                <p class="text-sm text-slate-500 uppercase font-bold">Egresos</p>
+            <div class="bg-white p-6 rounded-xl shadow-sm border-b-4 border-red-500">
+                <p class="text-xs text-slate-400 uppercase font-bold">Egresos</p>
                 <p id="totalEgresos" class="text-2xl font-bold egreso">$0.00</p>
             </div>
-            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
-                <p class="text-sm text-slate-500 uppercase font-bold">Balance Neto</p>
+            <div class="bg-white p-6 rounded-xl shadow-sm border-b-4 border-blue-500">
+                <p class="text-xs text-slate-400 uppercase font-bold">Balance Neto</p>
                 <p id="balanceNeto" class="text-2xl font-bold text-slate-800">$0.00</p>
             </div>
         </div>
 
         <div class="bg-white p-6 rounded-xl shadow-sm mb-8 border border-slate-100">
-            <h2 class="text-lg font-bold mb-4 text-slate-700">Registrar Nuevo Movimiento</h2>
+            <h2 class="text-lg font-bold mb-4 text-slate-700">Nuevo Movimiento</h2>
             <form id="finanzasForm" class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <input type="text" id="desc" placeholder="Descripción" class="p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none" required>
                 <input type="number" id="monto" placeholder="Monto" step="0.01" class="p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none" required>
@@ -69,17 +61,16 @@
                     <option value="ingreso">Ingreso (+)</option>
                     <option value="egreso">Egreso (-)</option>
                 </select>
-                <button type="submit" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition">Añadir</button>
+                <button type="submit" class="bg-blue-600 text-white font-bold py-2 rounded-lg hover:bg-blue-700 transition">Añadir</button>
             </form>
         </div>
 
         <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-slate-100">
             <table class="w-full text-left">
-                <thead class="bg-slate-100 border-b">
+                <thead class="bg-slate-50 border-b">
                     <tr>
-                        <th class="p-4 font-bold text-slate-600">Descripción</th>
-                        <th class="p-4 font-bold text-slate-600">Tipo</th>
-                        <th class="p-4 font-bold text-slate-600 text-right">Monto</th>
+                        <th class="p-4 text-slate-600">Descripción</th>
+                        <th class="p-4 text-right text-slate-600">Monto</th>
                     </tr>
                 </thead>
                 <tbody id="listaMovimientos"></tbody>
@@ -87,109 +78,111 @@
         </div>
     </div>
 
-    <script>
-        // Simulador de Base de Datos en el navegador
-        let db = JSON.parse(localStorage.getItem('finanzasDB')) || { usuarios: {} };
-        let usuarioActual = null;
-        let esModoRegistro = false;
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // --- LÓGICA DE USUARIOS ---
-        function cambiarModo() {
-            esModoRegistro = !esModoRegistro;
-            document.getElementById('authTitle').innerText = esModoRegistro ? 'Crear Cuenta' : 'Iniciar Sesión';
-            document.getElementById('btnAuth').innerText = esModoRegistro ? 'Registrarse' : 'Entrar';
-            document.getElementById('toggleText').innerText = esModoRegistro ? '¿Ya tienes cuenta?' : '¿No tienes cuenta?';
-            document.getElementById('toggleLink').innerText = esModoRegistro ? 'Entra aquí' : 'Regístrate';
-        }
+        // Configuración conectada a tu proyecto
+        const firebaseConfig = {
+            apiKey: "AIzaSyBWHMwEcWdg-vBuZ0XrOYYrn1PR0Ck5bXI",
+            authDomain: "finanzas-2026-efca9.firebaseapp.com",
+            projectId: "finanzas-2026-efca9",
+            storageBucket: "finanzas-2026-efca9.firebasestorage.app",
+            messagingSenderId: "308184261370",
+            appId: "1:308184261370:web:94e1d60157168be38f9f43",
+            measurementId: "G-EHCBKRNV2N"
+        };
 
-        function manejarAuth() {
-            const user = document.getElementById('userInput').value.trim().toLowerCase();
-            const pass = document.getElementById('passInput').value.trim();
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-            if (!user || !pass) return alert("Completa todos los campos");
+        const authContainer = document.getElementById('authContainer');
+        const appContainer = document.getElementById('appContainer');
 
-            if (esModoRegistro) {
-                if (db.usuarios[user]) return alert("El usuario ya existe");
-                
-                // Crear nuevo usuario con su propio historial vacío
-                db.usuarios[user] = { password: pass, movimientos: [] };
-                guardarDB();
-                alert("¡Cuenta creada! Ya puedes iniciar sesión");
-                cambiarModo();
+        // Registro
+        document.getElementById('btnReg').onclick = async () => {
+            const email = document.getElementById('emailInput').value;
+            const pass = document.getElementById('passInput').value;
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+                await setDoc(doc(db, "usuarios", userCredential.user.uid), { movimientos: [] });
+                alert("¡Cuenta registrada con éxito!");
+            } catch (error) { alert("Error al registrar: " + error.message); }
+        };
+
+        // Login
+        document.getElementById('btnLogin').onclick = async () => {
+            const email = document.getElementById('emailInput').value;
+            const pass = document.getElementById('passInput').value;
+            try { await signInWithEmailAndPassword(auth, email, pass); } 
+            catch (error) { alert("Error al entrar: Credenciales incorrectas"); }
+        };
+
+        // Logout
+        document.getElementById('btnLogout').onclick = () => signOut(auth);
+
+        // Estado de sesión
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                authContainer.classList.add('hidden');
+                appContainer.classList.remove('hidden');
+                document.getElementById('userStatus').innerText = "Conectado como: " + user.email;
+                escucharDatos(user.uid);
             } else {
-                // Login
-                if (db.usuarios[user] && db.usuarios[user].password === pass) {
-                    usuarioActual = user;
-                    mostrarApp();
-                } else {
-                    alert("Usuario o contraseña incorrectos");
-                }
+                authContainer.classList.remove('hidden');
+                appContainer.classList.add('hidden');
             }
+        });
+
+        // Sincronización en tiempo real
+        function escucharDatos(uid) {
+            onSnapshot(doc(db, "usuarios", uid), (docSnap) => {
+                if (docSnap.exists()) {
+                    actualizarUI(docSnap.data().movimientos || []);
+                }
+            });
         }
 
-        function mostrarApp() {
-            document.getElementById('authContainer').classList.add('hidden');
-            document.getElementById('appContainer').classList.remove('hidden');
-            document.getElementById('sesionUsuario').innerText = usuarioActual;
-            actualizarUI();
-        }
-
-        function cerrarSesion() {
-            usuarioActual = null;
-            document.getElementById('authContainer').classList.remove('hidden');
-            document.getElementById('appContainer').classList.add('hidden');
-            document.getElementById('userInput').value = '';
-            document.getElementById('passInput').value = '';
-        }
-
-        // --- LÓGICA DE MOVIMIENTOS ---
-        const form = document.getElementById('finanzasForm');
-        form.addEventListener('submit', (e) => {
+        // Añadir movimiento
+        document.getElementById('finanzasForm').onsubmit = async (e) => {
             e.preventDefault();
-            const mov = {
+            const nuevoMov = {
                 id: Date.now(),
                 desc: document.getElementById('desc').value,
                 monto: parseFloat(document.getElementById('monto').value),
                 tipo: document.getElementById('tipo').value
             };
-            
-            // Guardar en el historial del usuario activo
-            db.usuarios[usuarioActual].movimientos.push(mov);
-            guardarDB();
-            actualizarUI();
-            form.reset();
-        });
+            const userRef = doc(db, "usuarios", auth.currentUser.uid);
+            await updateDoc(userRef, { movimientos: arrayUnion(nuevoMov) });
+            e.target.reset();
+        };
 
-        function actualizarUI() {
+        function actualizarUI(movimientos) {
             const lista = document.getElementById('listaMovimientos');
             lista.innerHTML = '';
-            
-            let ingresos = 0;
-            let egresos = 0;
-            const movimientos = db.usuarios[usuarioActual].movimientos;
+            let ing = 0, egr = 0;
 
-            movimientos.forEach(m => {
+            // Ordenamos para que lo más nuevo salga arriba
+            [...movimientos].reverse().forEach(m => {
                 const row = document.createElement('tr');
                 row.className = 'border-b hover:bg-slate-50 transition';
                 row.innerHTML = `
                     <td class="p-4 text-slate-700 font-medium">${m.desc}</td>
-                    <td class="p-4 capitalize text-sm text-slate-500">${m.tipo}</td>
-                    <td class="p-4 text-right font-mono ${m.tipo === 'ingreso' ? 'ingreso' : 'egreso'}">
+                    <td class="p-4 text-right font-mono font-bold ${m.tipo === 'ingreso' ? 'ingreso' : 'egreso'}">
                         ${m.tipo === 'ingreso' ? '+' : '-'}$${m.monto.toFixed(2)}
                     </td>
                 `;
-                lista.prepend(row);
-                m.tipo === 'ingreso' ? ingresos += m.monto : egresos += m.monto;
+                lista.appendChild(row);
+                m.tipo === 'ingreso' ? ing += m.monto : egr += m.monto;
             });
 
-            document.getElementById('totalIngresos').innerText = `$${ingresos.toFixed(2)}`;
-            document.getElementById('totalEgresos').innerText = `$${egresos.toFixed(2)}`;
-            const balance = ingresos - egresos;
-            document.getElementById('balanceNeto').innerText = `$${balance.toFixed(2)}`;
-        }
-
-        function guardarDB() {
-            localStorage.setItem('finanzasDB', JSON.stringify(db));
+            document.getElementById('totalIngresos').innerText = `$${ing.toFixed(2)}`;
+            document.getElementById('totalEgresos').innerText = `$${egr.toFixed(2)}`;
+            const total = ing - egr;
+            document.getElementById('balanceNeto').innerText = `$${total.toFixed(2)}`;
+            document.getElementById('balanceNeto').className = `text-2xl font-bold ${total >= 0 ? 'text-slate-800' : 'egreso'}`;
         }
     </script>
 </body>
