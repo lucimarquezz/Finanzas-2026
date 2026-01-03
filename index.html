@@ -3,79 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finanzas 2026 - Acceso Seguro</title>
+    <title>Finanzas 2026 - Control de Acceso</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    <style>
+        .ingreso { color: #10b981; }
+        .egreso { color: #ef4444; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans min-h-screen">
 
-        // CONFIGURACIÓN DE FIREBASE (Reemplaza con tus datos de la consola de Firebase)
-        const firebaseConfig = {
-            apiKey: "TU_API_KEY",
-            authDomain: "TU_PROYECTO.firebaseapp.com",
-            projectId: "TU_PROYECTO",
-            storageBucket: "TU_PROYECTO.appspot.com",
-            messagingSenderId: "TU_ID",
-            appId: "TU_APP_ID"
-        };
+    <div id="authContainer" class="flex items-center justify-center min-h-screen">
+        <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-slate-100">
+            <h2 id="authTitle" class="text-2xl font-bold text-slate-800 mb-6 text-center">Iniciar Sesión</h2>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-600">Usuario</label>
+                    <input type="text" id="userInput" class="w-full p-3 border rounded-lg outline-none focus:ring-2 focus:ring-blue-400">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-600">Contraseña</label>
+                    <input type="password" id="passInput" class="w-full p-3 border rounded-lg outline-none focus:ring-2 focus:ring-blue-400">
+                </div>
+                <button onclick="manejarAuth()" id="btnAuth" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition">Entrar</button>
+                
+                <p class="text-center text-sm text-slate-500">
+                    <span id="toggleText">¿No tienes cuenta?</span> 
+                    <a href="javascript:void(0)" onclick="cambiarModo()" id="toggleLink" class="text-blue-600 font-bold hover:underline">Regístrate</a>
+                </p>
+            </div>
+        </div>
+    </div>
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+    <div id="appContainer" class="max-w-4xl mx-auto p-6 hidden">
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-slate-800">📊 Mis Finanzas 2026</h1>
+                <p class="text-slate-500">Sesión iniciada como: <span id="sesionUsuario" class="font-bold text-blue-600"></span></p>
+            </div>
+            <button onclick="cerrarSesion()" class="bg-slate-200 text-slate-700 px-4 py-2 rounded-lg hover:bg-slate-300 transition text-sm font-bold">Cerrar Sesión</button>
+        </header>
 
-        // --- LÓGICA DE INTERFAZ ---
-        const authSection = document.getElementById('authSection');
-        const appSection = document.getElementById('appSection');
-        const userEmailSpan = document.getElementById('userEmail');
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500">
+                <p class="text-sm text-slate-500 uppercase font-bold">Ingresos</p>
+                <p id="totalIngresos" class="text-2xl font-bold ingreso">$0.00</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500">
+                <p class="text-sm text-slate-500 uppercase font-bold">Egresos</p>
+                <p id="totalEgresos" class="text-2xl font-bold egreso">$0.00</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
+                <p class="text-sm text-slate-500 uppercase font-bold">Balance Neto</p>
+                <p id="balanceNeto" class="text-2xl font-bold text-slate-800">$0.00</p>
+            </div>
+        </div>
 
-        // Escuchar cambios de sesión
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                authSection.classList.add('hidden');
-                appSection.classList.remove('hidden');
-                userEmailSpan.innerText = user.email;
-                cargarDatos(user.uid);
+        <div class="bg-white p-6 rounded-xl shadow-sm mb-8 border border-slate-100">
+            <h2 class="text-lg font-bold mb-4 text-slate-700">Registrar Nuevo Movimiento</h2>
+            <form id="finanzasForm" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <input type="text" id="desc" placeholder="Descripción" class="p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none" required>
+                <input type="number" id="monto" placeholder="Monto" step="0.01" class="p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none" required>
+                <select id="tipo" class="p-2 border rounded-lg bg-white outline-none">
+                    <option value="ingreso">Ingreso (+)</option>
+                    <option value="egreso">Egreso (-)</option>
+                </select>
+                <button type="submit" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition">Añadir</button>
+            </form>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-slate-100">
+            <table class="w-full text-left">
+                <thead class="bg-slate-100 border-b">
+                    <tr>
+                        <th class="p-4 font-bold text-slate-600">Descripción</th>
+                        <th class="p-4 font-bold text-slate-600">Tipo</th>
+                        <th class="p-4 font-bold text-slate-600 text-right">Monto</th>
+                    </tr>
+                </thead>
+                <tbody id="listaMovimientos"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Simulador de Base de Datos en el navegador
+        let db = JSON.parse(localStorage.getItem('finanzasDB')) || { usuarios: {} };
+        let usuarioActual = null;
+        let esModoRegistro = false;
+
+        // --- LÓGICA DE USUARIOS ---
+        function cambiarModo() {
+            esModoRegistro = !esModoRegistro;
+            document.getElementById('authTitle').innerText = esModoRegistro ? 'Crear Cuenta' : 'Iniciar Sesión';
+            document.getElementById('btnAuth').innerText = esModoRegistro ? 'Registrarse' : 'Entrar';
+            document.getElementById('toggleText').innerText = esModoRegistro ? '¿Ya tienes cuenta?' : '¿No tienes cuenta?';
+            document.getElementById('toggleLink').innerText = esModoRegistro ? 'Entra aquí' : 'Regístrate';
+        }
+
+        function manejarAuth() {
+            const user = document.getElementById('userInput').value.trim().toLowerCase();
+            const pass = document.getElementById('passInput').value.trim();
+
+            if (!user || !pass) return alert("Completa todos los campos");
+
+            if (esModoRegistro) {
+                if (db.usuarios[user]) return alert("El usuario ya existe");
+                
+                // Crear nuevo usuario con su propio historial vacío
+                db.usuarios[user] = { password: pass, movimientos: [] };
+                guardarDB();
+                alert("¡Cuenta creada! Ya puedes iniciar sesión");
+                cambiarModo();
             } else {
-                authSection.classList.remove('hidden');
-                appSection.classList.add('hidden');
-            }
-        });
-
-        // Registro
-        window.registrar = async () => {
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('pass').value;
-            try {
-                const cred = await createUserWithEmailAndPassword(auth, email, pass);
-                await setDoc(doc(db, "usuarios", cred.user.uid), { movimientos: [] });
-            } catch (e) { alert("Error: " + e.message); }
-        };
-
-        // Login
-        window.login = async () => {
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('pass').value;
-            try { await signInWithEmailAndPassword(auth, email, pass); } 
-            catch (e) { alert("Credenciales incorrectas"); }
-        };
-
-        // Logout
-        window.logout = () => signOut(auth);
-
-        // --- LÓGICA DE FINANZAS ---
-        let movimientos = [];
-
-        async function cargarDatos(uid) {
-            const docRef = doc(db, "usuarios", uid);
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-                movimientos = docSnap.data().movimientos || [];
-                actualizarUI();
+                // Login
+                if (db.usuarios[user] && db.usuarios[user].password === pass) {
+                    usuarioActual = user;
+                    mostrarApp();
+                } else {
+                    alert("Usuario o contraseña incorrectos");
+                }
             }
         }
 
-        window.subirMovimiento = async (e) => {
+        function mostrarApp() {
+            document.getElementById('authContainer').classList.add('hidden');
+            document.getElementById('appContainer').classList.remove('hidden');
+            document.getElementById('sesionUsuario').innerText = usuarioActual;
+            actualizarUI();
+        }
+
+        function cerrarSesion() {
+            usuarioActual = null;
+            document.getElementById('authContainer').classList.remove('hidden');
+            document.getElementById('appContainer').classList.add('hidden');
+            document.getElementById('userInput').value = '';
+            document.getElementById('passInput').value = '';
+        }
+
+        // --- LÓGICA DE MOVIMIENTOS ---
+        const form = document.getElementById('finanzasForm');
+        form.addEventListener('submit', (e) => {
             e.preventDefault();
             const mov = {
                 id: Date.now(),
@@ -84,89 +153,44 @@
                 tipo: document.getElementById('tipo').value
             };
             
-            const user = auth.currentUser;
-            if (user) {
-                const userRef = doc(db, "usuarios", user.uid);
-                movimientos.push(mov);
-                await updateDoc(userRef, { movimientos: arrayUnion(mov) });
-                actualizarUI();
-                e.target.reset();
-            }
-        };
+            // Guardar en el historial del usuario activo
+            db.usuarios[usuarioActual].movimientos.push(mov);
+            guardarDB();
+            actualizarUI();
+            form.reset();
+        });
 
         function actualizarUI() {
             const lista = document.getElementById('listaMovimientos');
             lista.innerHTML = '';
-            let ingresos = 0, egresos = 0;
+            
+            let ingresos = 0;
+            let egresos = 0;
+            const movimientos = db.usuarios[usuarioActual].movimientos;
 
             movimientos.forEach(m => {
                 const row = document.createElement('tr');
                 row.className = 'border-b hover:bg-slate-50 transition';
-                row.innerHTML = `<td class="p-4">${m.desc}</td><td class="p-4 capitalize text-sm">${m.tipo}</td>
-                    <td class="p-4 text-right font-mono ${m.tipo === 'ingreso' ? 'text-green-500' : 'text-red-500'}">
-                    ${m.tipo === 'ingreso' ? '+' : '-'}$${m.monto.toFixed(2)}</td>`;
-                lista.appendChild(row);
+                row.innerHTML = `
+                    <td class="p-4 text-slate-700 font-medium">${m.desc}</td>
+                    <td class="p-4 capitalize text-sm text-slate-500">${m.tipo}</td>
+                    <td class="p-4 text-right font-mono ${m.tipo === 'ingreso' ? 'ingreso' : 'egreso'}">
+                        ${m.tipo === 'ingreso' ? '+' : '-'}$${m.monto.toFixed(2)}
+                    </td>
+                `;
+                lista.prepend(row);
                 m.tipo === 'ingreso' ? ingresos += m.monto : egresos += m.monto;
             });
 
             document.getElementById('totalIngresos').innerText = `$${ingresos.toFixed(2)}`;
             document.getElementById('totalEgresos').innerText = `$${egresos.toFixed(2)}`;
-            document.getElementById('balanceNeto').innerText = `$${(ingresos - egresos).toFixed(2)}`;
+            const balance = ingresos - egresos;
+            document.getElementById('balanceNeto').innerText = `$${balance.toFixed(2)}`;
+        }
+
+        function guardarDB() {
+            localStorage.setItem('finanzasDB', JSON.stringify(db));
         }
     </script>
-</head>
-<body class="bg-slate-50 font-sans min-h-screen p-6">
-
-    <div id="authSection" class="max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg mt-10">
-        <h2 class="text-2xl font-bold mb-6 text-center text-slate-800">🔐 Acceso Finanzas</h2>
-        <input type="email" id="email" placeholder="Email" class="w-full p-2 mb-4 border rounded">
-        <input type="password" id="pass" placeholder="Contraseña" class="w-full p-2 mb-6 border rounded">
-        <div class="flex gap-2">
-            <button onclick="login()" class="w-1/2 bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Entrar</button>
-            <button onclick="registrar()" class="w-1/2 bg-slate-200 text-slate-700 py-2 rounded hover:bg-slate-300">Registrarse</button>
-        </div>
-    </div>
-
-    <div id="appSection" class="max-w-4xl mx-auto hidden">
-        <header class="flex justify-between items-center mb-8">
-            <div>
-                <h1 class="text-3xl font-bold text-slate-800">📊 Mis Finanzas 2026</h1>
-                <p class="text-slate-500">Usuario: <span id="userEmail" class="font-bold"></span></p>
-            </div>
-            <button onclick="logout()" class="text-red-500 hover:underline">Cerrar Sesión</button>
-        </header>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500">
-                <p class="text-sm text-slate-500 uppercase font-bold">Ingresos</p>
-                <p id="totalIngresos" class="text-2xl font-bold text-green-500">$0.00</p>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500">
-                <p class="text-sm text-slate-500 uppercase font-bold">Egresos</p>
-                <p id="totalEgresos" class="text-2xl font-bold text-red-500">$0.00</p>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
-                <p class="text-sm text-slate-500 uppercase font-bold">Balance</p>
-                <p id="balanceNeto" class="text-2xl font-bold text-slate-800">$0.00</p>
-            </div>
-        </div>
-
-        <form onsubmit="subirMovimiento(event)" class="bg-white p-6 rounded-xl shadow-sm mb-8 grid grid-cols-1 md:grid-cols-4 gap-4">
-            <input type="text" id="desc" placeholder="Descripción" class="p-2 border rounded" required>
-            <input type="number" id="monto" placeholder="Monto" step="0.01" class="p-2 border rounded" required>
-            <select id="tipo" class="p-2 border rounded">
-                <option value="ingreso">Ingreso (+)</option>
-                <option value="egreso">Egreso (-)</option>
-            </select>
-            <button type="submit" class="bg-blue-600 text-white font-bold py-2 rounded">Añadir</button>
-        </form>
-
-        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-            <table class="w-full text-left">
-                <thead class="bg-slate-100"><tr class="text-slate-600"><th class="p-4">Descripción</th><th class="p-4">Tipo</th><th class="p-4 text-right">Monto</th></tr></thead>
-                <tbody id="listaMovimientos"></tbody>
-            </table>
-        </div>
-    </div>
 </body>
 </html>
